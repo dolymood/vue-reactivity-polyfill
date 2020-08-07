@@ -1,0 +1,40 @@
+{
+  "name": "reactivity-with-polyfill",
+  "version": "0.0.1",
+  "description": "Vue 3 reactivity with polyfill",
+  "main": "dist/reactivity.cjs.js",
+  "module": "dist/reactivity.es.js",
+  "jsdelivr": "dist/reactivity.global.js",
+  "unpkg": "dist/reactivity.global.js",
+  "types": "types/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "rm -rf dist && rollup -c rollup.config.js"
+  },
+  "author": "dolymood",
+  "license": "MIT",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "dependencies": {
+    "@vue/reactivity": "^3.0.0-rc.5",
+    "core-js": "^3.6.5",
+    "proxy-polyfill": "^0.3.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@babel/preset-env": "^7.11.0",
+    "@rollup/plugin-babel": "^5.1.0",
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-node-resolve": "^8.4.0",
+    "rollup": "^2.23.0",
+    "rollup-plugin-terser": "^6.1.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "not ie <= 11",
+    "Android >= 4.0",
+    "iOS >= 8"
+  ]
+}
