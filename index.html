@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>test</title>
+</head>
+<body>
+  <ul id="app"></ul>
+  <script>
+  self.Symbol = undefined
+  self.Proxy = undefined
+  self.Reflect = undefined
+  self.Set = undefined
+  self.Map = undefined
+  self.WeakSet = undefined
+  self.WeakMap = undefined
+  </script>
+  <script src="dist/reactivity.global.js"></script>
+  <script>
+  var log = function (content) {
+    var el = document.createElement('li')
+    el.innerHTML = content
+    app.appendChild(el)
+  }
+  var o = VueReactivity.reactive({
+    state: 1,
+    state2: {
+      a: 'a'
+    },
+    state3: true
+  })
+  VueReactivity.effect(function () {
+    log(o.state + '' + o.state3 + JSON.stringify(o.state2))
+  })
+  </script>
+</body>
+</html>

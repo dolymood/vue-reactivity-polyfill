@@ -1,0 +1,124 @@
+diff --git a/node_modules/proxy-polyfill/src/proxy.js b/node_modules/proxy-polyfill/src/proxy.js
+index 01ced4b..fd629b6 100644
+--- a/node_modules/proxy-polyfill/src/proxy.js
++++ b/node_modules/proxy-polyfill/src/proxy.js
+@@ -104,7 +104,9 @@ module.exports = function proxyPolyfill() {
+     handler = { 'get': null, 'set': null, 'apply': null, 'construct': null };
+     for (let k in unsafeHandler) {
+       if (!(k in handler)) {
+-        throw new TypeError(`Proxy polyfill does not support trap '${k}'`);
++        // MYHACK
++        // throw new TypeError(`Proxy polyfill does not support trap '${k}'`);
++        // console.error(`Proxy polyfill does not support trap '${k}'`);
+       }
+       handler[k] = unsafeHandler[k];
+     }
+@@ -114,6 +116,30 @@ module.exports = function proxyPolyfill() {
+       handler.apply = unsafeHandler.apply.bind(unsafeHandler);
+     }
+ 
++    // Create default getters/setters. Create different code paths as handler.get/handler.set can't
++    // change after creation.
++    const getter = handler.get ? function(prop) {
++      throwRevoked('get');
++      return handler.get(this, prop, proxy);
++    } : function(prop) {
++      throwRevoked('get');
++      return this[prop];
++    };
++    const setter = handler.set ? function(prop, value) {
++      throwRevoked('set');
++      const status = handler.set(this, prop, value, proxy);
++      // TODO(samthor): If the calling code is in strict mode, throw TypeError.
++      // if (!status) {
++        // It's (sometimes) possible to work this out, if this code isn't strict- try to load the
++        // callee, and if it's available, that code is non-strict. However, this isn't exhaustive.
++      // }
++    } : function(prop, value) {
++      throwRevoked('set');
++      this[prop] = value;
++    };
++
++    const propertyMap = {};
++
+     // Define proxy as an object that extends target.[[Prototype]],
+     // or a Function (if either it's callable, or apply is set).
+     const proto = getProto(target);  // can return null in old browsers
+@@ -148,43 +174,39 @@ module.exports = function proxyPolyfill() {
+       proxy = [];
+       isArray = true;
+     } else {
+-      proxy = (canCreateNullProtoObjects || proto !== null) ? objectCreate(proto) : {};
++      if (proto) {
++        // set delegate proxy proto
++        // const proxyProto = canCreateNullProtoObjects ? objectCreate(proto) : {};
++        proxy = new proto.constructor()
++        const propertyNames = $Object.getOwnPropertyNames(proto);
++        propertyNames.forEach(function(prop) {
++          const real = $Object.getOwnPropertyDescriptor(proto, prop);
++          const desc = {
++            enumerable: Boolean(real.enumerable),
++            get: getter.bind(target, prop)
++            // can not set proto prop
++            // set: setter.bind(target, prop)
++          };
++          $Object.defineProperty(proxy, prop, desc);
++          propertyMap[prop] = true;
++        });
++        // proxy = canCreateNullProtoObjects ? objectCreate(proxyProto) : proxyProto;
++      } else {
++        proxy = {};
++      }
+     }
+ 
+-    // Create default getters/setters. Create different code paths as handler.get/handler.set can't
+-    // change after creation.
+-    const getter = handler.get ? function(prop) {
+-      throwRevoked('get');
+-      return handler.get(this, prop, proxy);
+-    } : function(prop) {
+-      throwRevoked('get');
+-      return this[prop];
+-    };
+-    const setter = handler.set ? function(prop, value) {
+-      throwRevoked('set');
+-      const status = handler.set(this, prop, value, proxy);
+-      // TODO(samthor): If the calling code is in strict mode, throw TypeError.
+-      // if (!status) {
+-        // It's (sometimes) possible to work this out, if this code isn't strict- try to load the
+-        // callee, and if it's available, that code is non-strict. However, this isn't exhaustive.
+-      // }
+-    } : function(prop, value) {
+-      throwRevoked('set');
+-      this[prop] = value;
+-    };
+-
+     // Clone direct properties (i.e., not part of a prototype).
+     const propertyNames = $Object.getOwnPropertyNames(target);
+-    const propertyMap = {};
+     propertyNames.forEach(function(prop) {
+-      if ((isMethod || isArray) && prop in proxy) {
++      if (propertyMap[prop] || ((isMethod || isArray) && prop in proxy)) {
+         return;  // ignore properties already here, e.g. 'bind', 'prototype' etc
+       }
+       const real = $Object.getOwnPropertyDescriptor(target, prop);
+       const desc = {
+         enumerable: Boolean(real.enumerable),
+         get: getter.bind(target, prop),
+-        set: setter.bind(target, prop),
++        set: setter.bind(target, prop)
+       };
+       $Object.defineProperty(proxy, prop, desc);
+       propertyMap[prop] = true;
+@@ -221,8 +243,9 @@ module.exports = function proxyPolyfill() {
+     }
+ 
+     // The Proxy polyfill cannot handle adding new properties. Seal the target and proxy.
+-    $Object.seal(target);
+-    $Object.seal(proxy);
++    // MYHACK
++    // $Object.seal(target);
++    // $Object.seal(proxy);
+ 
+     return proxy;  // nb. if isMethod is true, proxy != this
+   };
