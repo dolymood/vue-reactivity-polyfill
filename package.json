@@ -7,10 +7,11 @@
   "jsdelivr": "dist/reactivity.global.js",
   "unpkg": "dist/reactivity.global.js",
   "types": "types/index.d.ts",
-  "sideEffects": false,
+  "sideEffects": ["src/array.ts", "src/collections.ts", "src/proxy.ts"],
   "scripts": {
     "test": "jest --runInBand",
     "build": "rm -rf dist && rollup -c rollup.base.config.js && rollup -c rollup.browser.config.js",
+    "patch-all": "patch-package core-js && patch-package proxy-polyfill",
     "postinstall": "patch-package"
   },
   "author": "dolymood",

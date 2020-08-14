@@ -1,4 +1,4 @@
-import { ref, isRef, reactive, isReactive, toRaw, markRaw, computed } from '../src'
+import { ref, isRef, reactive, isReactive, toRaw, markRaw, computed, del, set } from '../src'
 
 describe('reactivity/reactive', () => {
   test('Object', () => {
@@ -43,15 +43,15 @@ describe('reactivity/reactive', () => {
   })
 
   test('observed value should proxy mutations to original (Object)', () => {
-    const original: any = { foo: 1, bar: undefined }
+    const original: any = { foo: 1 }
     const observed = reactive(original)
     // set
-    observed.bar = 1
+    set(observed, 'bar', 1)
     expect(observed.bar).toBe(1)
     expect(original.bar).toBe(1)
-    // delete
-    // delete observed.foo
-    // expect('foo' in observed).toBe(false)
+    del(observed, 'foo')
+    expect('foo' in observed).toBe(false)
+    // todo
     // expect('foo' in original).toBe(false)
   })
 
@@ -78,11 +78,11 @@ describe('reactivity/reactive', () => {
   })
 
   test('should not pollute original object with Proxies', () => {
-    const original: any = { foo: 1, bar: undefined }
+    const original: any = { foo: 1 }
     const original2 = { bar: 2 }
     const observed = reactive(original)
     const observed2 = reactive(original2)
-    observed.bar = observed2
+    set(observed, 'bar', observed2)
     expect(observed.bar).toBe(observed2)
     expect(original.bar).toBe(original2)
   })

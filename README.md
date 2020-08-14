@@ -5,13 +5,20 @@
 - Use [proxy-polyfill](https://github.com/GoogleChrome/proxy-polyfill)
 - Use core-js
 
+### New API
+
+- set(target, key, val)
+- del(target, key)
+- getLength(target: ArrayLike)
+
 ### Do not support
 
 > WIP
 
-- Set
-- Map
-- WeakSet
-- WeakMap
+- Symbol key
+- Array length
+- Dynamic prop, `object[key]` or `array[index]`
+- delete
+- objectSpread
 
 More, see [proxy-polyfill](https://github.com/GoogleChrome/proxy-polyfill#readme)

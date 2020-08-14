@@ -33,6 +33,41 @@
   VueReactivity.effect(function () {
     log(o.state + '' + o.state3 + JSON.stringify(o.state2))
   })
+
+  setTimeout(function () {
+    o.state = 2
+    o.state3 = false
+  }, 1000)
+  setTimeout(function () {
+    o.state2.a = 'new a'
+    o.state = 3
+  }, 3000)
+
+  const a = VueReactivity.reactive([1, 2, 3, 4, 5])
+  VueReactivity.effect(function () {
+    log('array-changed')
+    a.forEach(function (v, i) {
+      log('array-' + i + ':' + v)
+    })
+  })
+  a.push(6)
+  a.pop() // get length, get x, delete, set length
+  a.shift() // get length, get 0 delete, set 0, length
+  a.unshift(7)
+  a.splice(1, 2, 8)
+  a.sort(function (a, b) {
+    return a - b
+  })
+  a.reverse()
+
+  debugger
+  const key = Symbol('symbol keyed prop')
+  let dummy, hasDummy
+  const obj = VueReactivity.reactive({ [key]: 'value' })
+  VueReactivity.effect(() => (dummy = obj[key]))
+  VueReactivity.effect(() => (hasDummy = key in obj))
+
+  console.log(dummy, hasDummy)
   </script>
 </body>
 </html>

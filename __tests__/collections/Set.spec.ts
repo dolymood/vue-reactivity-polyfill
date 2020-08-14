@@ -36,24 +36,26 @@ describe('reactivity/collections', () => {
     })
 
     it('should observe for of iteration', () => {
-      let dummy
+      let dummy = 0
       const set = reactive(new Set() as Set<number>)
       effect(() => {
         dummy = 0
-        for (let num of set) {
+        set.forEach((num) => {
           dummy += num
-        }
+        })
+        // for (let num of set) {
+        //   dummy += num
+        // }
       })
 
       expect(dummy).toBe(0)
-      // todo
-      // set.add(2)
-      // set.add(1)
-      // expect(dummy).toBe(3)
-      // set.delete(2)
-      // expect(dummy).toBe(1)
-      // set.clear()
-      // expect(dummy).toBe(0)
+      set.add(2)
+      set.add(1)
+      expect(dummy).toBe(3)
+      set.delete(2)
+      expect(dummy).toBe(1)
+      set.clear()
+      expect(dummy).toBe(0)
     })
 
     it('should observe forEach iteration', () => {

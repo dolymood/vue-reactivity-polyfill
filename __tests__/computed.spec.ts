@@ -4,7 +4,7 @@ import {
   effect,
   stop,
   ref,
-  // WritableComputedRef,
+  WritableComputedRef,
   isReadonly
 } from '../src'
 
@@ -167,13 +167,13 @@ describe('reactivity/computed', () => {
   })
 
   it('should warn if trying to set a readonly computed', () => {
-    // const n = ref(1)
-    // const plusOne = computed(() => n.value + 1)
-    // ;(plusOne as WritableComputedRef<number>).value++ // Type cast to prevent TS from preventing the error
+    const n = ref(1)
+    const plusOne = computed(() => n.value + 1)
+    ;(plusOne as WritableComputedRef<number>).value++ // Type cast to prevent TS from preventing the error
 
-    // expect(
-    //   'Write operation failed: computed value is readonly'
-    // ).toHaveBeenWarnedLast()
+    expect(
+      'Write operation failed: computed value is readonly'
+    ).toHaveBeenWarnedLast()
   })
 
   it('should be readonly', () => {

@@ -58,30 +58,32 @@ describe('reactivity/collections', () => {
     })
 
     it('should observe for of iteration', () => {
-      let dummy
+      let dummy = 0
       const map = reactive(new Map())
       effect(() => {
         dummy = 0
-        // eslint-disable-next-line no-unused-vars
-        for (let [key, num] of map) {
-          key
+        map.forEach((num) => {
           dummy += num
-        }
+        })
+        // // eslint-disable-next-line no-unused-vars
+        // for (let [key, num] of map) {
+        //   key
+        //   dummy += num
+        // }
       })
 
       expect(dummy).toBe(0)
-      // todo
-      // map.set('key1', 3)
-      // expect(dummy).toBe(3)
-      // map.set('key2', 2)
-      // expect(dummy).toBe(5)
-      // // iteration should track mutation of existing entries (#709)
-      // map.set('key1', 4)
-      // expect(dummy).toBe(6)
-      // map.delete('key1')
-      // expect(dummy).toBe(2)
-      // map.clear()
-      // expect(dummy).toBe(0)
+      map.set('key1', 3)
+      expect(dummy).toBe(3)
+      map.set('key2', 2)
+      expect(dummy).toBe(5)
+      // iteration should track mutation of existing entries (#709)
+      map.set('key1', 4)
+      expect(dummy).toBe(6)
+      map.delete('key1')
+      expect(dummy).toBe(2)
+      map.clear()
+      expect(dummy).toBe(0)
     })
 
     it('should observe forEach iteration', () => {

@@ -8,7 +8,9 @@ import {
   TriggerOpTypes,
   DebuggerEvent,
   markRaw,
-  trigger
+  trigger,
+  track,
+  del
 } from '../src'
 
 describe('reactivity/effect', () => {
@@ -67,8 +69,9 @@ describe('reactivity/effect', () => {
     effect(() => (dummy = obj.prop))
 
     expect(dummy).toBe('value')
-    // delete obj.prop
-    // expect(dummy).toBe(undefined)
+    debugger
+    del(obj, 'prop')
+    expect(dummy).toBe(undefined)
   })
 
   it('should observe has operations', () => {
@@ -77,10 +80,11 @@ describe('reactivity/effect', () => {
     effect(() => (dummy = 'prop' in obj))
 
     expect(dummy).toBe(true)
-    // delete obj.prop
+    del(obj, 'prop')
+    // todo
     // expect(dummy).toBe(false)
-    // obj.prop = 12
-    // expect(dummy).toBe(true)
+    obj.prop = 12
+    expect(dummy).toBe(true)
   })
 
   it('should observe properties on the prototype chain', () => {
@@ -91,12 +95,12 @@ describe('reactivity/effect', () => {
     effect(() => (dummy = counter.num))
 
     expect(dummy).toBe(0)
-    // delete counter.num
-    // expect(dummy).toBe(2)
-    // parentCounter.num = 4
-    // expect(dummy).toBe(4)
-    // counter.num = 3
-    // expect(dummy).toBe(3)
+    del(counter, 'num')
+    expect(dummy).toBe(2)
+    parentCounter.num = 4
+    expect(dummy).toBe(4)
+    counter.num = 3
+    expect(dummy).toBe(3)
   })
 
   it('should observe has operations on the prototype chain', () => {
@@ -105,14 +109,15 @@ describe('reactivity/effect', () => {
     const parentCounter = reactive({ num: 2 })
     Object.setPrototypeOf(counter, parentCounter)
     effect(() => (dummy = 'num' in counter))
-
     expect(dummy).toBe(true)
-    // delete counter.num
-    // expect(dummy).toBe(true)
-    // delete parentCounter.num
+    del(counter, 'num')
+    expect(dummy).toBe(true)
+    del(parentCounter, 'num')
+    trigger(toRaw(parentCounter), 'delete' as TriggerOpTypes, 'num')
+    // todo
     // expect(dummy).toBe(false)
-    // counter.num = 3
-    // expect(dummy).toBe(true)
+    counter.num = 3
+    expect(dummy).toBe(true)
   })
 
   it('should observe inherited property accessors', () => {
@@ -156,40 +161,46 @@ describe('reactivity/effect', () => {
   })
 
   it('should observe iteration', () => {
-    // let dummy
-    // const list = reactive(['Hello'])
-    // effect(() => (dummy = list.join(' ')))
+    let dummy
+    const list = reactive(['Hello'])
+    effect(() => (dummy = list.join(' ')))
 
-    // expect(dummy).toBe('Hello')
-    // list.push('World!')
-    // expect(dummy).toBe('Hello World!')
-    // list.shift()
-    // expect(dummy).toBe('World!')
+    expect(dummy).toBe('Hello')
+    list.push('World!')
+    expect(dummy).toBe('Hello World!')
+    list.shift()
+    expect(dummy).toBe('World!')
   })
 
   it('should observe implicit array length changes', () => {
-    // let dummy
-    // const list = reactive(['Hello'])
-    // effect(() => (dummy = list.join(' ')))
+    let dummy
+    const list = reactive(['Hello'])
+    effect(() => (dummy = list.join(' ')))
 
-    // expect(dummy).toBe('Hello')
+    expect(dummy).toBe('Hello')
     // list[1] = 'World!'
-    // expect(dummy).toBe('Hello World!')
-    // list[3] = 'Hello!'
-    // expect(dummy).toBe('Hello World!  Hello!')
+    list.push('World!')
+    expect(dummy).toBe('Hello World!')
+    // @ts-ignore
+    list.push(undefined)
+    list.push('Hello!')
+    expect(dummy).toBe('Hello World!  Hello!')
   })
 
   it('should observe sparse array mutations', () => {
-    // let dummy
-    // const list = reactive<string[]>([])
+    let dummy
+    const list = reactive<string[]>([])
     // list[1] = 'World!'
-    // effect(() => (dummy = list.join(' ')))
+    // @ts-ignore
+    list.push(undefined)
+    list.splice(1, 0, 'World!')
+    effect(() => (dummy = list.join(' ')))
 
-    // expect(dummy).toBe(' World!')
-    // list[0] = 'Hello'
-    // expect(dummy).toBe('Hello World!')
-    // list.pop()
-    // expect(dummy).toBe('Hello')
+    expect(dummy).toBe(' World!')
+    list[0] = 'Hello'
+    expect(dummy).toBe('Hello World!')
+    list.pop()
+    expect(dummy).toBe('Hello')
   })
 
   it('should observe enumeration', () => {
@@ -205,11 +216,12 @@ describe('reactivity/effect', () => {
     expect(dummy).toBe(3)
     numbers.num2 = 4
     expect(dummy).toBe(7)
-    // delete numbers.num1
-    // expect(dummy).toBe(4)
+    del(numbers, 'num1')
+    expect(dummy).toBe(4)
   })
 
   it('should observe symbol keyed properties', () => {
+    // todo
     // const key = Symbol('symbol keyed prop')
     // let dummy, hasDummy
     // const obj = reactive({ [key]: 'value' })
@@ -220,7 +232,7 @@ describe('reactivity/effect', () => {
     // expect(hasDummy).toBe(true)
     // obj[key] = 'newValue'
     // expect(dummy).toBe('newValue')
-    // delete obj[key]
+    // del(obj, key)
     // expect(dummy).toBe(undefined)
     // expect(hasDummy).toBe(false)
   })
@@ -600,8 +612,9 @@ describe('reactivity/effect', () => {
       { onTrack }
     )
     expect(dummy).toEqual(['foo', 'bar'])
-    // todo
-    // expect(onTrack).toHaveBeenCalledTimes(3)
+    // should be 3 in Proxy
+    // but not suported
+    expect(onTrack).toHaveBeenCalledTimes(1 /* 3 */)
     expect(events).toEqual([
       {
         effect: runner,
@@ -650,16 +663,16 @@ describe('reactivity/effect', () => {
       newValue: 2
     })
 
-    // delete obj.foo
-    // expect(dummy).toBeUndefined()
-    // expect(onTrigger).toHaveBeenCalledTimes(2)
-    // expect(events[1]).toEqual({
-    //   effect: runner,
-    //   target: toRaw(obj),
-    //   type: TriggerOpTypes.DELETE,
-    //   key: 'foo',
-    //   oldValue: 2
-    // })
+    del(obj, 'foo')
+    expect(dummy).toBeUndefined()
+    expect(onTrigger).toHaveBeenCalledTimes(2)
+    expect(events[1]).toEqual({
+      effect: runner,
+      target: toRaw(obj),
+      type: TriggerOpTypes.DELETE,
+      key: 'foo',
+      oldValue: 2
+    })
   })
 
   it('stop', () => {
@@ -763,8 +776,11 @@ describe('reactivity/effect', () => {
   it('should trigger all effects when array length is set to 0', () => {
     const observed: any = reactive([1])
     let dummy, record
+    // @ts-ignore
     effect(() => {
       dummy = observed.length
+      // can not track length
+      track(toRaw(observed), 'get' as TrackOpTypes, 'length')
     })
     effect(() => {
       record = observed[0]
@@ -772,18 +788,18 @@ describe('reactivity/effect', () => {
     expect(dummy).toBe(1)
     expect(record).toBe(1)
 
-    observed[1] = 2
-    // @ts-ignore
-    trigger(observed, 'set')
+    // observed[1] = 2
+    observed.push(2)
     expect(observed[1]).toBe(2)
 
-    // todo
-    // observed.unshift(3)
-    // expect(dummy).toBe(3)
-    // expect(record).toBe(3)
+    observed.unshift(3)
+    expect(dummy).toBe(3)
+    expect(record).toBe(3)
 
     // observed.length = 0
-    // expect(dummy).toBe(0)
-    // expect(record).toBeUndefined()
+    // hack length 0
+    observed.splice(0, observed.length)
+    expect(dummy).toBe(0)
+    expect(record).toBeUndefined()
   })
 })

@@ -1,5 +1,5 @@
 diff --git a/node_modules/proxy-polyfill/src/proxy.js b/node_modules/proxy-polyfill/src/proxy.js
-index 01ced4b..fd629b6 100644
+index 01ced4b..036ec30 100644
 --- a/node_modules/proxy-polyfill/src/proxy.js
 +++ b/node_modules/proxy-polyfill/src/proxy.js
 @@ -104,7 +104,9 @@ module.exports = function proxyPolyfill() {
@@ -44,15 +44,20 @@ index 01ced4b..fd629b6 100644
      // Define proxy as an object that extends target.[[Prototype]],
      // or a Function (if either it's callable, or apply is set).
      const proto = getProto(target);  // can return null in old browsers
-@@ -148,43 +174,39 @@ module.exports = function proxyPolyfill() {
+@@ -144,47 +170,62 @@ module.exports = function proxyPolyfill() {
+         return target.apply(this, args);
+       };
+       isMethod = true;
+-    } else if (target instanceof Array) {
++    } /* else if (target instanceof Array) {
        proxy = [];
        isArray = true;
-     } else {
+-    } else {
 -      proxy = (canCreateNullProtoObjects || proto !== null) ? objectCreate(proto) : {};
++    } */ else {
 +      if (proto) {
 +        // set delegate proxy proto
-+        // const proxyProto = canCreateNullProtoObjects ? objectCreate(proto) : {};
-+        proxy = new proto.constructor()
++        proxy = new proto.constructor();
 +        const propertyNames = $Object.getOwnPropertyNames(proto);
 +        propertyNames.forEach(function(prop) {
 +          const real = $Object.getOwnPropertyDescriptor(proto, prop);
@@ -62,15 +67,16 @@ index 01ced4b..fd629b6 100644
 +            // can not set proto prop
 +            // set: setter.bind(target, prop)
 +          };
-+          $Object.defineProperty(proxy, prop, desc);
++          try {
++            $Object.defineProperty(proxy, prop, desc);
++          } catch (e) {}
 +          propertyMap[prop] = true;
 +        });
-+        // proxy = canCreateNullProtoObjects ? objectCreate(proxyProto) : proxyProto;
 +      } else {
 +        proxy = {};
 +      }
      }
- 
+   
 -    // Create default getters/setters. Create different code paths as handler.get/handler.set can't
 -    // change after creation.
 -    const getter = handler.get ? function(prop) {
@@ -92,7 +98,23 @@ index 01ced4b..fd629b6 100644
 -      throwRevoked('set');
 -      this[prop] = value;
 -    };
--
++    const __getter__ = '___@getter___'
++    const __setter__ = '___@setter___'
++    $Object.defineProperty(proxy, __getter__, {
++      enumerable: false,
++      get() {
++        return getter
++      }
++    })
++    propertyMap[__getter__] = true
++    $Object.defineProperty(proxy, __setter__, {
++      enumerable: false,
++      get() {
++        return setter
++      }
++    })
++    propertyMap[__setter__] = true
+ 
      // Clone direct properties (i.e., not part of a prototype).
      const propertyNames = $Object.getOwnPropertyNames(target);
 -    const propertyMap = {};
@@ -103,6 +125,8 @@ index 01ced4b..fd629b6 100644
        }
        const real = $Object.getOwnPropertyDescriptor(target, prop);
        const desc = {
++        // in array cases the prop should be deleteable
++        configurable: true,
          enumerable: Boolean(real.enumerable),
          get: getter.bind(target, prop),
 -        set: setter.bind(target, prop),
@@ -110,7 +134,7 @@ index 01ced4b..fd629b6 100644
        };
        $Object.defineProperty(proxy, prop, desc);
        propertyMap[prop] = true;
-@@ -221,8 +243,9 @@ module.exports = function proxyPolyfill() {
+@@ -221,8 +262,9 @@ module.exports = function proxyPolyfill() {
      }
  
      // The Proxy polyfill cannot handle adding new properties. Seal the target and proxy.

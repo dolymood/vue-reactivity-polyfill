@@ -1,6 +1,4 @@
-import { shallowReactive, isReactive, reactive, effect, trigger, track } from '../src'
-// @ts-ignore
-import _Set from 'core-js/es/set'
+import { shallowReactive, isReactive, reactive, effect, track, TrackOpTypes, toRaw } from '../src'
 
 describe('shallowReactive', () => {
   test('should not make non-reactive properties reactive', () => {
@@ -34,13 +32,12 @@ describe('shallowReactive', () => {
     })
 
     test('should not observe when iterating', () => {
-      // todo
-      // const shallowSet = shallowReactive(new Set())
-      // const a = {}
-      // shallowSet.add(a)
+      const shallowSet = shallowReactive(new Set())
+      const a = {}
+      shallowSet.add(a)
 
-      // const spreadA = [...shallowSet][0]
-      // expect(isReactive(spreadA)).toBe(false)
+      const spreadA = [...shallowSet][0]
+      expect(isReactive(spreadA)).toBe(false)
     })
 
     test('should not get reactive entry', () => {
@@ -65,12 +62,11 @@ describe('shallowReactive', () => {
     test('onTrack on called on objectSpread', () => {
       const onTrackFn = jest.fn()
       const origin = new Set()
-      // const shallowSet = shallowReactive(origin)
+      const shallowSet = shallowReactive(origin)
       let a
       effect(
         () => {
-          // @ts-ignore
-          a = Array.from(origin)
+          a = Array.from(shallowSet)
         },
         {
           onTrack: onTrackFn
@@ -78,7 +74,7 @@ describe('shallowReactive', () => {
       )
 
       expect(a).toMatchObject([])
-      // expect(onTrackFn).toHaveBeenCalled()
+      expect(onTrackFn).toHaveBeenCalled()
     })
   })
 
@@ -90,19 +86,15 @@ describe('shallowReactive', () => {
 
       effect(() => {
         size = shallowArray.length
-        // @ts-ignore
-        track(shallowArray, 'get', 'length')
+        track(toRaw(shallowArray), 'get' as TrackOpTypes, 'length')
       })
 
       expect(size).toBe(0)
 
       shallowArray.push(a)
-      // @ts-ignore
-      trigger(shallowArray, 'add')
       expect(size).toBe(1)
-      // todo
-      // shallowArray.pop()
-      // expect(size).toBe(0)
+      shallowArray.pop()
+      expect(size).toBe(0)
     })
     test('should not observe when iterating', () => {
       const shallowArray = shallowReactive<object[]>([])
@@ -127,7 +119,7 @@ describe('shallowReactive', () => {
       )
 
       expect(a).toMatchObject([])
-      // expect(onTrackFn).toHaveBeenCalled()
+      expect(onTrackFn).toHaveBeenCalled()
     })
   })
 })
