@@ -11,8 +11,7 @@
   "scripts": {
     "test": "jest --runInBand",
     "build": "rm -rf dist && rollup -c rollup.base.config.js && rollup -c rollup.browser.config.js",
-    "patch-all": "patch-package core-js && patch-package proxy-polyfill",
-    "postinstall": "patch-package"
+    "patch-all": "patch-package core-js && patch-package proxy-polyfill"
   },
   "author": "dolymood",
   "license": "MIT",
