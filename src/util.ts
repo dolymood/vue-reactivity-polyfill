@@ -1,4 +1,5 @@
-import { toRaw, trigger, isReactive, isReadonly, TriggerOpTypes } from '@vue/reactivity'
+import { reactive, readonly, toRaw, trigger, isReactive, isReadonly, TriggerOpTypes } from '@vue/reactivity'
+import { isObject } from '@vue/shared'
 
 export function def(obj: any, key: string, attrs: object) {
   Object.defineProperty(obj, key, {
@@ -44,3 +45,11 @@ export function addProp (proxy: any, key: any, val: any) {
     proxy[key] = val
   }
 }
+
+ export const toReactive = <T extends unknown>(value: T): T =>
+  isObject(value) ? reactive(value) : value
+
+export const toReadonly = <T extends unknown>(value: T): T =>
+  isObject(value) ? readonly(value) : value
+
+export const toShallow = <T extends unknown>(value: T): T => value
