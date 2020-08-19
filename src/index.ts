@@ -1,7 +1,7 @@
 import 'proxy-polyfill/src/index'
+import './proxy'
 import './collections'
 import './array'
-import './proxy'
 
 export { getLength } from './array'
 export { set } from './set'

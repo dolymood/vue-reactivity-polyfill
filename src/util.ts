@@ -9,6 +9,11 @@ export function def(obj: any, key: string, attrs: object) {
   })
 }
 
+export function isPolyfillProxy (proxy: any) {
+  const getter = proxy['___@getter___']
+  return !!getter
+}
+
 export function isValidArrayIndex (val: any) {
   const n = parseFloat(String(val))
   return n >= 0 && Math.floor(n) === n && isFinite(val)

@@ -1,12 +1,15 @@
 import { isReactive, toRaw, trigger, TriggerOpTypes } from '@vue/reactivity'
 import { hasOwn } from '@vue/shared'
-import { isValidArrayIndex, handleReadonly } from './util'
+import { isValidArrayIndex, handleReadonly, isPolyfillProxy } from './util'
 
 /**
  * Delete a property and trigger change if necessary.
  */
 export function del (target: Array<any> | Object, key: any) {
   const proxy = target as any
+  if (!isPolyfillProxy(proxy)) {
+    delete proxy[key]
+  }
   target = toRaw(proxy) as any
   if (handleReadonly(target, key)) {
     return

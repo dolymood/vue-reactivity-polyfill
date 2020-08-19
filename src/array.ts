@@ -1,7 +1,7 @@
 import { def } from './util'
 import { ReactiveFlags } from './proxy'
 import { ITERATE_KEY, toRaw, trigger, isReactive, TriggerOpTypes, isReadonly, isProxy, track, TrackOpTypes } from '@vue/reactivity'
-import { addProp, handleReadonly, toReactive, toReadonly, toShallow } from './util'
+import { addProp, handleReadonly, toReactive, toReadonly, toShallow, isPolyfillProxy } from './util'
 // clone https://github.com/vuejs/vue/blob/dev/src/core/observer/array.js
 const arrayProto: any = Array.prototype
 // const methods = Object.getOwnPropertyNames(arrayProto)
@@ -107,6 +107,9 @@ def(arrayMethods, method, {
 const originFrom = Array.from
 originFrom && (Array.from = function <T>(arrayLike: ArrayLike<T>): T[] {
   const ret = originFrom<T>(arrayLike)
+  if (!isPolyfillProxy(arrayLike)) {
+    return ret
+  }
   const raw = toRaw(arrayLike)
   // at least call once for ITERATE_KEY
   track(raw, 'interate' as TrackOpTypes, ITERATE_KEY)
