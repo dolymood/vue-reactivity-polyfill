@@ -11,9 +11,7 @@
 - del(target, key)
 - getLength(target: ArrayLike)
 
-### Do not support
-
-> WIP
+### Unsupported Cases
 
 - Symbol key
 - Array length
