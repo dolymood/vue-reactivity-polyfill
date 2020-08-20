@@ -7,6 +7,7 @@
 
 ### New API
 
+- get(target, path, defaultValue)
 - set(target, key, val)
 - del(target, key)
 - getLength(target: ArrayLike)

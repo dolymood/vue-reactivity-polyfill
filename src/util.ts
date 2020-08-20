@@ -43,7 +43,7 @@ export function addProp (proxy: any, key: any, val: any) {
       set: setter.bind(target, key)
     }
     def(proxy, String(key), desc)
-    trigger(target, 'set' as TriggerOpTypes, key, val)
+    trigger(target, 'add' as TriggerOpTypes, key, val)
   } else if (handleReadonly(proxy, key)) {
   } else {
     // just set
@@ -58,3 +58,20 @@ export const toReadonly = <T extends unknown>(value: T): T =>
   isObject(value) ? readonly(value) : value
 
 export const toShallow = <T extends unknown>(value: T): T => value
+
+export function memoize<T extends (...args: any[]) => any>(func: T) {
+  type FuncType = typeof func
+  var memoized = function (this: any, key, ...args) {
+    const cache = memoized.cache
+    if (cache.has(key)) {
+      return cache.get(key)
+    }
+    const result = func.apply(this, [key, ...args])
+    memoized.cache = cache.set(key, result)
+    return result
+  } as FuncType & {
+    cache: WeakMap<any, any>
+  }
+  memoized.cache = new WeakMap()
+  return memoized
+}
