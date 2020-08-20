@@ -23,6 +23,7 @@
   "license": "MIT",
   "files": [
     "src",
+    "patches",
     "dist",
     "types"
   ],
