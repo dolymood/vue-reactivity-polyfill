@@ -9,8 +9,8 @@ import {
   DebuggerEvent,
   markRaw,
   trigger,
-  track,
-  del
+  del,
+  get
 } from '../src'
 
 describe('reactivity/effect', () => {
@@ -776,11 +776,8 @@ describe('reactivity/effect', () => {
   it('should trigger all effects when array length is set to 0', () => {
     const observed: any = reactive([1])
     let dummy, record
-    // @ts-ignore
     effect(() => {
-      dummy = observed.length
-      // can not track length
-      track(toRaw(observed), 'get' as TrackOpTypes, 'length')
+      dummy = get(observed, 'length')
     })
     effect(() => {
       record = observed[0]

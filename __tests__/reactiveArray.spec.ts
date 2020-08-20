@@ -1,4 +1,4 @@
-import { reactive, isReactive, toRaw, ref, isRef, effect, track, TrackOpTypes } from '../src'
+import { reactive, isReactive, toRaw, ref, isRef, effect, get } from '../src'
 
 describe('reactivity/reactive/Array', () => {
   test('should make Array reactive', () => {
@@ -92,8 +92,7 @@ describe('reactivity/reactive/Array', () => {
     const arr = reactive([1, 2, 3])
     const fn = jest.fn()
     effect(() => {
-      fn(arr.length)
-      track(toRaw(arr), 'get' as TrackOpTypes, 'length')
+      fn(get(arr, 'length'))
     })
     expect(fn).toHaveBeenCalledTimes(1)
     // todo

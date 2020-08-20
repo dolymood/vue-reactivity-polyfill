@@ -1,4 +1,4 @@
-import { shallowReactive, isReactive, reactive, effect, track, TrackOpTypes, toRaw } from '../src'
+import { shallowReactive, isReactive, reactive, effect, get } from '../src'
 
 describe('shallowReactive', () => {
   test('should not make non-reactive properties reactive', () => {
@@ -85,8 +85,7 @@ describe('shallowReactive', () => {
       let size
 
       effect(() => {
-        size = shallowArray.length
-        track(toRaw(shallowArray), 'get' as TrackOpTypes, 'length')
+        size = get(shallowArray, 'length')
       })
 
       expect(size).toBe(0)
