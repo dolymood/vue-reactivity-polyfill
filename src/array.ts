@@ -1,5 +1,4 @@
-import { def } from './util'
-import { ReactiveFlags } from './proxy'
+import { def, ReactiveFlags } from './util'
 import { ITERATE_KEY, toRaw, trigger, isReactive, TriggerOpTypes, isReadonly, isProxy, track, TrackOpTypes } from '@vue/reactivity'
 import { addProp, handleReadonly, toReactive, toReadonly, toShallow, isPolyfillProxy } from './util'
 // clone https://github.com/vuejs/vue/blob/dev/src/core/observer/array.js

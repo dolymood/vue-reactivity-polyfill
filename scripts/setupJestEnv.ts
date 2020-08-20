@@ -27,24 +27,12 @@ const _WeakSet = require('core-js/es/weak-set')
 // @ts-ignore
 const _WeakMap = require('core-js/es/weak-map')
 
-if (!self.Symbol) {
-  self.Symbol = _Symbol
-}
-if (!self.Reflect) {
-  self.Reflect = _Reflect
-}
-if (!self.Set) {
-  self.Set = _Set
-}
-if (!self.Map) {
-  self.Map = _Map
-}
-if (!self.WeakSet) {
-  self.WeakSet = _WeakSet
-}
-if (!self.WeakMap) {
-  self.WeakMap = _WeakMap
-}
+self.Symbol = _Symbol
+self.Reflect = _Reflect
+self.Set = _Set
+self.Map = _Map
+self.WeakSet = _WeakSet
+self.WeakMap = _WeakMap
 
 expect.extend({
   toHaveBeenWarned(received: string) {

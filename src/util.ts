@@ -1,6 +1,15 @@
 import { reactive, readonly, toRaw, trigger, isReactive, isReadonly, TriggerOpTypes } from '@vue/reactivity'
 import { isObject } from '@vue/shared'
 
+export const ReactiveFlags: Record<string, string> = {
+  SKIP: '__v_skip',
+  IS_REACTIVE: '__v_isReactive',
+  IS_READONLY: '__v_isReadonly',
+  RAW: '__v_raw',
+  REACTIVE: '__v_reactive',
+  READONLY: '__v_readonly'
+}
+
 export function def(obj: any, key: string, attrs: object) {
   Object.defineProperty(obj, key, {
     configurable: true,

@@ -14,7 +14,7 @@ const extensions = ['.js', '.ts']
 
 const config = {
   input: 'src/index.ts',
-  external: ['@vue/shared', 'core-js'],
+  external: ['@vue/shared', /@babel\/runtime/, /core-js/],
   output: [
     {
       file: 'dist/reactivity.cjs.js',
@@ -30,7 +30,7 @@ const config = {
       extensions
     }),
     commonjs(),
-    babel({ extensions, babelHelpers: 'bundled' }),
+    babel({ extensions, babelHelpers: 'runtime' }),
     replace({
       __TEST__: false,
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)

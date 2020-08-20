@@ -1,3 +1,5 @@
+const runtimeVersion = require('@babel/runtime/package.json').version
+
 module.exports = {
   ignore: [ /core-js/, /@babel\/runtime/ ],
   presets: [
@@ -7,5 +9,15 @@ module.exports = {
       useBuiltIns: 'usage'
     }],
     '@babel/preset-typescript'
+  ],
+  plugins: [
+    ['@babel/plugin-transform-runtime', {
+      absoluteRuntime: false,
+      corejs: false,
+      helpers: true,
+      regenerator: false,
+      useESModules: false,
+      version: runtimeVersion
+    }]
   ]
 }

@@ -1,15 +1,6 @@
 import { hasOwn } from '@vue/shared'
-import { def } from './util'
+import { def, ReactiveFlags } from './util'
 import { arrayMethods } from './array'
-
-export const ReactiveFlags: Record<string, string> = {
-  SKIP: '__v_skip',
-  IS_REACTIVE: '__v_isReactive',
-  IS_READONLY: '__v_isReadonly',
-  RAW: '__v_raw',
-  REACTIVE: '__v_reactive',
-  READONLY: '__v_readonly'
-}
 
 const _Proxy = self.Proxy
 const isNativeProxy = _Proxy && /native code/.test(_Proxy.toString())
