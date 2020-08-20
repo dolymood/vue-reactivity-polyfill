@@ -1,5 +1,6 @@
 import 'proxy-polyfill/src/index'
 import './proxy'
+import './reflect'
 import './array'
 
 export { getLength } from './array'

@@ -3,7 +3,7 @@ import { def, ReactiveFlags } from './util'
 import { arrayMethods } from './array'
 
 const _Proxy = self.Proxy
-const isNativeProxy = _Proxy && /native code/.test(_Proxy.toString())
+export const isNativeProxy = _Proxy && /native code/.test(_Proxy.toString())
 if (!isNativeProxy) {
   // hack Proxy for Vue
   const ProxyPolyfill: any = function (target: any, handler: any) {
