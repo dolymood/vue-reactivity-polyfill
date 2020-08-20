@@ -1,1 +1,1 @@
-export * from '@vue/reactivity'
+export * from '../src/index'
