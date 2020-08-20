@@ -79,8 +79,8 @@ export function memoize<T extends (...args: any[]) => any>(func: T) {
     memoized.cache = cache.set(key, result)
     return result
   } as FuncType & {
-    cache: WeakMap<any, any>
+    cache: Map<any, any>
   }
-  memoized.cache = new WeakMap()
+  memoized.cache = new Map()
   return memoized
 }
