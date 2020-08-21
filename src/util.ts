@@ -73,3 +73,16 @@ export function memoize<T extends (...args: any[]) => any>(func: T) {
   memoized.cache = new Map()
   return memoized
 }
+
+export function protoAugment (target: any, src: object) {
+  target.__proto__ = src
+}
+
+export function copyAugment (target: any, src: any, keys: string[]) {
+  keys.forEach((key) => {
+    def(target, key, {
+      writable: true,
+      value: src[key]
+    })
+  })
+}

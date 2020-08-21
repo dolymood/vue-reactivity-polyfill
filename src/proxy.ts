@@ -1,15 +1,21 @@
 import { hasOwn } from '@vue/shared'
-import { def, ReactiveFlags } from './util'
+import { def, ReactiveFlags, protoAugment, copyAugment } from './util'
 import { arrayMethods } from './array'
 import { NativeProxy, isNativeProxy } from './support'
 
 if (!isNativeProxy) {
+  const hasProto = '__proto__' in {}
+  var arrayKeys = Object.getOwnPropertyNames(arrayMethods)
   // hack Proxy for Vue
   const ProxyPolyfill: any = function (target: any, handler: any) {
     const proxy = new NativeProxy(target, handler)
     if (Array.isArray(target)) {
       // array cases
-      Object.setPrototypeOf(target, arrayMethods)
+      if (hasProto) {
+        protoAugment(target, arrayMethods)
+      } else {
+        copyAugment(target, arrayMethods, arrayKeys)
+      }
     }
     for (let k in ReactiveFlags) {
       const key = ReactiveFlags[k]
