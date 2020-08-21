@@ -115,6 +115,12 @@ export function get (object: unknown, path: any, defaultVal?: unknown) {
   return result === undefined ? defaultVal : result
 }
 
+export function getLength<T> (array: Array<T>) {
+  const len = array.length
+  track(toRaw(array), 'get' as TrackOpTypes, 'length')
+  return len
+}
+
 const reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/
 const reIsPlainProp = /^\w*$/
 const reLeadingDot = /^\./

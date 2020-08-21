@@ -8,10 +8,10 @@
   "unpkg": "dist/reactivity.global.js",
   "types": "types/index.d.ts",
   "sideEffects": [
-    "src/array.ts",
     "src/collections.ts",
+    "src/support.ts",
     "src/proxy.ts",
-    "src/reflect.ts"
+    "src/patches/*.ts"
   ],
   "scripts": {
     "test": "jest --runInBand",

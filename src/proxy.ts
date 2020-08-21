@@ -1,13 +1,12 @@
 import { hasOwn } from '@vue/shared'
 import { def, ReactiveFlags } from './util'
 import { arrayMethods } from './array'
+import { NativeProxy, isNativeProxy } from './support'
 
-const _Proxy = self.Proxy
-export const isNativeProxy = _Proxy && /native code/.test(_Proxy.toString())
 if (!isNativeProxy) {
   // hack Proxy for Vue
   const ProxyPolyfill: any = function (target: any, handler: any) {
-    const proxy = new _Proxy(target, handler)
+    const proxy = new NativeProxy(target, handler)
     if (Array.isArray(target)) {
       // array cases
       Object.setPrototypeOf(target, arrayMethods)
@@ -29,6 +28,6 @@ if (!isNativeProxy) {
     }
     return proxy
   }
-  ProxyPolyfill.revocable = _Proxy.revocable
+  ProxyPolyfill.revocable = NativeProxy.revocable
   self.Proxy = ProxyPolyfill
 }

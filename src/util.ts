@@ -1,5 +1,7 @@
 import { reactive, readonly, toRaw, trigger, isReactive, isReadonly, TriggerOpTypes } from '@vue/reactivity'
 import { isObject } from '@vue/shared'
+import { def } from './lang'
+export { def, isPolyfillProxy } from './lang'
 
 export const ReactiveFlags: Record<string, string> = {
   SKIP: '__v_skip',
@@ -8,19 +10,6 @@ export const ReactiveFlags: Record<string, string> = {
   RAW: '__v_raw',
   REACTIVE: '__v_reactive',
   READONLY: '__v_readonly'
-}
-
-export function def(obj: any, key: string, attrs: object) {
-  Object.defineProperty(obj, key, {
-    configurable: true,
-    enumerable: false,
-    ...attrs
-  })
-}
-
-export function isPolyfillProxy (proxy: any) {
-  const getter = proxy['___@getter___']
-  return !!getter
 }
 
 export function isValidArrayIndex (val: any) {

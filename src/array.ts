@@ -1,6 +1,5 @@
-import { def, ReactiveFlags } from './util'
+import { def, ReactiveFlags, addProp, handleReadonly, toReactive, toReadonly, toShallow } from './util'
 import { ITERATE_KEY, toRaw, trigger, isReactive, TriggerOpTypes, isReadonly, isProxy, track, TrackOpTypes } from '@vue/reactivity'
-import { addProp, handleReadonly, toReactive, toReadonly, toShallow, isPolyfillProxy } from './util'
 // clone https://github.com/vuejs/vue/blob/dev/src/core/observer/array.js
 const arrayProto: any = Array.prototype
 // const methods = Object.getOwnPropertyNames(arrayProto)
@@ -102,39 +101,6 @@ def(arrayMethods, method, {
   }
 })
 
-// hack array from
-const originFrom = Array.from
-originFrom && (Array.from = function <T>(arrayLike: ArrayLike<T>): T[] {
-  const ret = originFrom<T>(arrayLike)
-  if (!isPolyfillProxy(arrayLike)) {
-    return ret
-  }
-  const raw = toRaw(arrayLike)
-  // at least call once for ITERATE_KEY
-  track(raw, 'interate' as TrackOpTypes, ITERATE_KEY)
-  // check forEach
-  // @ts-ignore
-  if (raw.forEach) {
-    // @ts-ignore
-    raw.forEach((_, key) => {
-      track(raw, 'get' as TrackOpTypes, key)
-    })
-  } else {
-    const len = raw.length
-    for (let i = 0; i < len; i++) {
-      track(raw, 'get' as TrackOpTypes, i)
-    }
-  }
-  return ret
-})
-
-function getLength<T> (array: Array<T>) {
-  const len = array.length
-  track(toRaw(array), 'get' as TrackOpTypes, 'length')
-  return len
-}
-
 export {
-  arrayMethods,
-  getLength
+  arrayMethods
 }

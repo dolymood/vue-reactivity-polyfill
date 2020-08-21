@@ -1,10 +1,8 @@
 import 'proxy-polyfill/src/index'
+import './patches'
 import './proxy'
-import './reflect'
-import './array'
 
-export { getLength } from './array'
 export { set } from './set'
-export { get } from './get'
+export { get, getLength } from './get'
 export { del } from './del'
 export * from '@vue/reactivity'

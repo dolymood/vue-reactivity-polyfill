@@ -1,4 +1,4 @@
-import { isNativeProxy } from './proxy'
+import { isNativeProxy } from '../support'
 // @ts-ignore
 import anObject from 'core-js/internals/an-object'
 // @ts-ignore
