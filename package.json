@@ -51,7 +51,7 @@
     "vue": "^3.0.0-rc.5"
   },
   "peerDependencies": {
-    "@vue/reactivity": "^3",
+    "@vue/reactivity": "^3.0.0-rc.5",
     "@babel/core": "*",
     "@babel/runtime": "^7",
     "core-js": "^3.6.5"
