@@ -69,7 +69,6 @@ describe('reactivity/effect', () => {
     effect(() => (dummy = obj.prop))
 
     expect(dummy).toBe('value')
-    debugger
     del(obj, 'prop')
     expect(dummy).toBe(undefined)
   })

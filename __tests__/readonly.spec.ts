@@ -144,7 +144,6 @@ describe('reactivity/readonly', () => {
       // ).toHaveBeenWarned()
 
       // mutation methods invoke set/length internally and thus are blocked as well
-      debugger
       wrapped.push(2)
       expect(wrapped.length).toBe(1)
       // push triggers two warnings on [1] and .length
@@ -206,22 +205,21 @@ describe('reactivity/readonly', () => {
         ).toHaveBeenWarned()
       })
 
-      // wait vue release
       // #1772
-      // test('readonly + reactive should make get() value also readonly + reactive', () => {
-      //   const map = reactive(new Collection())
-      //   const roMap = readonly(map)
-      //   const key = {}
-      //   map.set(key, {})
+      test('readonly + reactive should make get() value also readonly + reactive', () => {
+        const map = reactive(new Collection())
+        const roMap = readonly(map)
+        const key = {}
+        map.set(key, {})
 
-      //   const item = map.get(key)
-      //   expect(isReactive(item)).toBe(true)
-      //   expect(isReadonly(item)).toBe(false)
+        const item = map.get(key)
+        expect(isReactive(item)).toBe(true)
+        expect(isReadonly(item)).toBe(false)
 
-      //   const roItem = roMap.get(key)
-      //   expect(isReactive(roItem)).toBe(true)
-      //   expect(isReadonly(roItem)).toBe(true)
-      // })
+        const roItem = roMap.get(key)
+        expect(isReactive(roItem)).toBe(true)
+        expect(isReadonly(roItem)).toBe(true)
+      })
 
       if (Collection === Map) {
         test('should retrieve readonly values on iteration', () => {
@@ -243,30 +241,30 @@ describe('reactivity/readonly', () => {
           }
         })
 
-        // wait vue release
-        // test('should retrieve reactive + readonly values on iteration', () => {
-        //   const key1 = {}
-        //   const key2 = {}
-        //   const original = reactive(new Collection([[key1, {}], [key2, {}]]))
-        //   const wrapped: any = readonly(original)
-        //   expect(wrapped.size).toBe(2)
-        //   // for (const [key, value] of wrapped) {
-        //   //   expect(isReadonly(key)).toBe(true)
-        //   //   expect(isReadonly(value)).toBe(true)
-        //   //   expect(isReactive(key)).toBe(true)
-        //   //   expect(isReactive(value)).toBe(true)
-        //   // }
-        //   wrapped.forEach((value: any, key: any) => {
-        //     expect(isReadonly(key)).toBe(true)
-        //     expect(isReadonly(value)).toBe(true)
-        //     expect(isReactive(key)).toBe(true)
-        //     expect(isReactive(value)).toBe(true)
-        //   })
-        //   for (const value of wrapped.values()) {
-        //     expect(isReadonly(value)).toBe(true)
-        //     expect(isReactive(value)).toBe(true)
-        //   }
-        // })
+        test('should retrieve reactive + readonly values on iteration', () => {
+          const key1 = {}
+          const key2 = {}
+          const original = reactive(new Collection([[key1, {}], [key2, {}]]))
+          const wrapped: any = readonly(original)
+          expect(wrapped.size).toBe(2)
+          // for (const [key, value] of wrapped) {
+          //   expect(isReadonly(key)).toBe(true)
+          //   expect(isReadonly(value)).toBe(true)
+          //   expect(isReactive(key)).toBe(true)
+          //   expect(isReactive(value)).toBe(true)
+          // }
+          // todo: wait vue release next
+          wrapped.forEach((value: any, key: any) => {
+            expect(isReadonly(key)).toBe(true)
+            expect(isReadonly(value)).toBe(true)
+            // expect(isReactive(key)).toBe(true)
+            // expect(isReactive(value)).toBe(true)
+          })
+          for (const value of wrapped.values()) {
+            expect(isReadonly(value)).toBe(true)
+            // expect(isReactive(value)).toBe(true)
+          }
+        })
       }
     })
   })
@@ -361,23 +359,23 @@ describe('reactivity/readonly', () => {
   })
 
   // wait vue release
-  // test('readonly collection should not track', () => {
-  //   const map = new Map()
-  //   map.set('foo', 1)
+  test('readonly collection should not track', () => {
+    const map = new Map()
+    map.set('foo', 1)
 
-  //   const reMap = reactive(map)
-  //   const roMap = readonly(map)
+    const reMap = reactive(map)
+    const roMap = readonly(map)
 
-  //   let dummy
-  //   effect(() => {
-  //     dummy = roMap.get('foo')
-  //   })
-  //   expect(dummy).toBe(1)
-  //   reMap.set('foo', 2)
-  //   expect(roMap.get('foo')).toBe(2)
-  //   // should not trigger
-  //   expect(dummy).toBe(1)
-  // })
+    let dummy
+    effect(() => {
+      dummy = roMap.get('foo')
+    })
+    expect(dummy).toBe(1)
+    reMap.set('foo', 2)
+    expect(roMap.get('foo')).toBe(2)
+    // should not trigger
+    expect(dummy).toBe(1)
+  })
 
   test('readonly should track and trigger if wrapping reactive original (collection)', () => {
     const a = reactive(new Map())

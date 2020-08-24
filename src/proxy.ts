@@ -21,9 +21,8 @@ if (!isNativeProxy) {
       const key = ReactiveFlags[k]
       // undefined do not use to define and should not define
       // if target hasOwn key can not define again
-      if (!hasOwn(target, key)) {
-        const initVal = handler.get(target, key, proxy)
-        if (key !== ReactiveFlags.READONLY || initVal !== undefined) {
+      if (!hasOwn(target, key) || target[key] !== target) {
+        if (key !== ReactiveFlags.READONLY || handler.get(target, key, proxy) !== undefined) {
           def(proxy, key, {
             get() {
               return handler.get(target, key, proxy)
