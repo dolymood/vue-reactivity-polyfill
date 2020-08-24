@@ -1,6 +1,6 @@
 {
   "name": "vue-reactivity-with-polyfill",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Vue 3 reactivity with polyfill",
   "main": "dist/reactivity.cjs.js",
   "module": "dist/reactivity.esm-bundler.js",
@@ -17,7 +17,7 @@
     "test": "jest --runInBand",
     "build": "rm -rf dist && rollup -c rollup.base.config.js && rollup -c rollup.browser.config.js",
     "patch-all": "patch-package proxy-polyfill",
-    "prepublish": "npm run build"
+    "prepublish": "npm run test && npm run build"
   },
   "author": "dolymood",
   "license": "MIT",
