@@ -28,6 +28,7 @@
     "types"
   ],
   "dependencies": {
+    "@vue/reactivity": "^3.0.0-rc.8",
     "patch-package": "^6.2.2",
     "proxy-polyfill": "^0.3.2"
   },
@@ -47,8 +48,7 @@
     "rollup": "^2.23.0",
     "rollup-plugin-terser": "^6.1.0",
     "ts-jest": "^26.1.4",
-    "typescript": "^3.9.7",
-    "vue": "^3.0.0-rc.8"
+    "typescript": "^3.9.7"
   },
   "peerDependencies": {
     "@vue/shared": "^3.0.0-rc.5",
