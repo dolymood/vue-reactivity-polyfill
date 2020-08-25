@@ -14,7 +14,7 @@ const extensions = ['.js', '.ts']
 
 const config = {
   input: 'src/index.ts',
-  external: ['@vue/shared', /@babel\/runtime/, /core-js/],
+  external: ['@vue/shared', /@babel\/runtime/, /core-js/, '@vue/reactivity'],
   output: [
     {
       file: 'dist/reactivity.cjs.js',
