@@ -1,6 +1,6 @@
 {
   "name": "vue-reactivity-with-polyfill",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Vue 3 reactivity with polyfill",
   "main": "dist/reactivity.cjs.js",
   "module": "dist/reactivity.esm-bundler.js",
@@ -43,6 +43,7 @@
     "@rollup/plugin-node-resolve": "^8.4.0",
     "@rollup/plugin-replace": "^2.3.3",
     "@types/jest": "^26.0.9",
+    "@vue/runtime-dom": "^3.0.0-rc.8",
     "core-js": "^3.6.5",
     "jest": "^26.3.0",
     "rollup": "^2.23.0",
