@@ -5,6 +5,10 @@
 - Use [proxy-polyfill](https://github.com/GoogleChrome/proxy-polyfill)
 - Use core-js
 
+If you want to use with Vue3 to be compatible with IE9+, you need to use [vue3-plugin-polyfill](https://github.com/dolymood/vue3-plugin-polyfill) too.
+
+Here is a demo, [vue-next-demo](https://github.com/dolymood/vue-next-demo).
+
 ### Usage
 
 ```js
