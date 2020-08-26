@@ -1,10 +1,17 @@
 version: 2.1
 
+step_install_deps: &install_deps
+  run:
+    name: Install Dependencies
+    command: npm i
+
 jobs:
   test:
     docker:
       - image: circleci/node:lts
     steps:
+      - checkout
+      - *install_deps
       - run: npx patch-package
       - run: npm run test
 
