@@ -15,7 +15,7 @@
     "test": "jest --runInBand",
     "build": "rm -rf dist && rollup -c rollup.base.config.js",
     "patch-all": "patch-package proxy-polyfill",
-    "prepublish": "npm run test && npm run build"
+    "prepublishOnly": "npm run test && npm run build"
   },
   "author": "dolymood",
   "license": "MIT",
