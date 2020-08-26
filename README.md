@@ -1,4 +1,4 @@
-# vue-reactivity-polyfill
+# vue-reactivity-polyfill [![CircleCI](https://circleci.com/gh/dolymood/vue-reactivity-polyfill.svg?style=svg)](https://circleci.com/gh/dolymood/vue-reactivity-polyfill)
 
 `@vue/reactivity` can not support no `Proxy` envs, this pkg ployfill it.
 
