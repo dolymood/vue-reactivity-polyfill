@@ -1,9 +1,19 @@
-# vue-reactivity-with-polyfill
+# vue-reactivity-polyfill
 
 `@vue/reactivity` can not support no `Proxy` envs, this pkg ployfill it.
 
 - Use [proxy-polyfill](https://github.com/GoogleChrome/proxy-polyfill)
 - Use core-js
+
+### Usage
+
+```js
+import { ref } from '@vue/reactivity'
+// or
+import { ref } from 'vue'
+// add polyfill
+import { get, set, del } from 'vue-reactivity-polyfill'
+```
 
 ### New API
 

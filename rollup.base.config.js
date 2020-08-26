@@ -7,21 +7,21 @@ import replace from '@rollup/plugin-replace'
 const extensions = ['.js', '.ts']
 
 // with external
-// reactivity.cjs
-// reactivity.cjs.prod
-// reactivity.esm-bundler
-// reactivity.esm-bundler.prod
+// reactivity-polyfill.cjs
+// reactivity-polyfill.cjs.prod
+// reactivity-polyfill.esm-bundler
+// reactivity-polyfill.esm-bundler.prod
 
 const config = {
   input: 'src/index.ts',
-  external: ['@vue/shared', /@babel\/runtime/, /core-js/],
+  external: ['@vue/shared', '@vue/reactivity', /@babel\/runtime/, /core-js/],
   output: [
     {
-      file: 'dist/reactivity.cjs.js',
+      file: 'dist/reactivity-polyfill.cjs.js',
       format: 'cjs'
     },
     {
-      file: 'dist/reactivity.esm-bundler.js',
+      file: 'dist/reactivity-polyfill.esm-bundler.js',
       format: 'es'
     }
   ],

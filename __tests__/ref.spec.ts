@@ -8,7 +8,8 @@ import {
   Ref,
   isReactive,
   shallowRef, unref, customRef, triggerRef
-} from '../src'
+} from '@vue/reactivity'
+import '../src'
 import { computed } from '@vue/runtime-dom'
 
 describe('reactivity/ref', () => {

@@ -1,21 +1,24 @@
 import config, { addProd } from './rollup.base.config'
 
 // no external
-// reactivity.esm-browser
-// reactivity.esm-browser.prod
-// reactivity.global
-// reactivity.global.prod
+// reactivity-polyfill.esm-browser
+// reactivity-polyfill.esm-browser.prod
+// reactivity-polyfill.global
+// reactivity-polyfill.global.prod
 
-config.external = []
+config.external = ['@vue/reactivity']
 config.output = [
   {
-    file: 'dist/reactivity.esm-browser.js',
+    file: 'dist/reactivity-polyfill.esm-browser.js',
     format: 'es'
   },
   {
-    file: 'dist/reactivity.global.js',
-    name: 'VueReactivity',
-    format: 'iife'
+    file: 'dist/reactivity-polyfill.global.js',
+    name: 'VueReactivityPolyfill',
+    format: 'iife',
+    globals: {
+      '@vue/reactivity': 'Vue'
+    }
   }
 ]
 

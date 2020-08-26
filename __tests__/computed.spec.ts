@@ -6,7 +6,8 @@ import {
   ref,
   WritableComputedRef,
   isReadonly
-} from '../src'
+} from '@vue/reactivity'
+import '../src'
 
 describe('reactivity/computed', () => {
   it('should return updated value', () => {

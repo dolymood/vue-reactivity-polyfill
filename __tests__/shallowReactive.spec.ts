@@ -1,4 +1,5 @@
-import { shallowReactive, isReactive, reactive, effect, get } from '../src'
+import { shallowReactive, isReactive, reactive, effect } from '@vue/reactivity'
+import { get } from '../src'
 
 describe('shallowReactive', () => {
   test('should not make non-reactive properties reactive', () => {

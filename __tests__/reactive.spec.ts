@@ -1,4 +1,5 @@
-import { ref, isRef, reactive, isReactive, toRaw, markRaw, computed, del, set } from '../src'
+import { ref, isRef, reactive, isReactive, toRaw, markRaw, computed } from '@vue/reactivity'
+import { del, set } from '../src'
 
 describe('reactivity/reactive', () => {
   test('Object', () => {

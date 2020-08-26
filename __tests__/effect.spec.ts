@@ -9,6 +9,8 @@ import {
   DebuggerEvent,
   markRaw,
   trigger,
+} from '@vue/reactivity'
+import {
   del,
   get
 } from '../src'

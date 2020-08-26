@@ -1,4 +1,5 @@
-import { reactive, effect, toRaw, isReactive } from '../../src'
+import { reactive, effect, toRaw, isReactive } from '@vue/reactivity'
+import '../../src'
 
 describe('reactivity/collections', () => {
   describe('WeakMap', () => {
