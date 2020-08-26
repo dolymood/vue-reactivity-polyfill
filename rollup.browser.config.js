@@ -1,10 +1,10 @@
 import config, { addProd } from './rollup.base.config'
 
+// todo, vue exports track trigger can gengerate these files
+
 // no external
 // reactivity-polyfill.esm-browser
 // reactivity-polyfill.esm-browser.prod
-// reactivity-polyfill.global
-// reactivity-polyfill.global.prod
 
 config.external = ['@vue/reactivity']
 config.output = [
@@ -17,7 +17,7 @@ config.output = [
     name: 'VueReactivityPolyfill',
     format: 'iife',
     globals: {
-      '@vue/reactivity': 'Vue'
+      '@vue/reactivity': 'Vue || VueRuntimeDOM'
     }
   }
 ]
