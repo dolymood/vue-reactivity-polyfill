@@ -43,6 +43,61 @@ describe('reactivity/reactive', () => {
     expect(isReactive(observed.array[0])).toBe(true)
   })
 
+  test('observing subtypes of IterableCollections(Map, Set)', () => {
+    // subtypes of Map
+    class CustomMap extends Map {}
+    const cmap = reactive(new CustomMap())
+
+    expect(cmap instanceof Map).toBe(true)
+    expect(isReactive(cmap)).toBe(true)
+
+    // cmap.set('key', {})
+    // expect(isReactive(cmap.get('key'))).toBe(true)
+
+    // // subtypes of Set
+    // class CustomSet extends Set {}
+    // const cset = reactive(new CustomSet())
+
+    // expect(cset instanceof Set).toBe(true)
+    // expect(isReactive(cset)).toBe(true)
+
+    // let dummy
+    // effect(() => (dummy = cset.has('value')))
+    // expect(dummy).toBe(false)
+    // cset.add('value')
+    // expect(dummy).toBe(true)
+    // cset.delete('value')
+    // expect(dummy).toBe(false)
+  })
+
+  test('observing subtypes of WeakCollections(WeakMap, WeakSet)', () => {
+    // subtypes of WeakMap
+    class CustomMap extends WeakMap {}
+    const cmap = reactive(new CustomMap())
+
+    expect(cmap instanceof WeakMap).toBe(true)
+    expect(isReactive(cmap)).toBe(true)
+
+    // const key = {}
+    // cmap.set(key, {}) 
+    // expect(isReactive(cmap.get(key))).toBe(true)
+
+    // // subtypes of WeakSet
+    // class CustomSet extends WeakSet {}
+    // const cset = reactive(new CustomSet())
+
+    // expect(cset instanceof WeakSet).toBe(true)
+    // expect(isReactive(cset)).toBe(true)
+
+    // let dummy
+    // effect(() => (dummy = cset.has(key)))
+    // expect(dummy).toBe(false)
+    // cset.add(key)
+    // expect(dummy).toBe(true)
+    // cset.delete(key)
+    // expect(dummy).toBe(false)
+  })
+
   test('observed value should proxy mutations to original (Object)', () => {
     const original: any = { foo: 1 }
     const observed = reactive(original)
