@@ -255,16 +255,15 @@ describe('reactivity/readonly', () => {
           //   expect(isReactive(key)).toBe(true)
           //   expect(isReactive(value)).toBe(true)
           // }
-          // todo: wait vue release next
           wrapped.forEach((value: any, key: any) => {
             expect(isReadonly(key)).toBe(true)
             expect(isReadonly(value)).toBe(true)
-            // expect(isReactive(key)).toBe(true)
-            // expect(isReactive(value)).toBe(true)
+            expect(isReactive(key)).toBe(true)
+            expect(isReactive(value)).toBe(true)
           })
           for (const value of wrapped.values()) {
             expect(isReadonly(value)).toBe(true)
-            // expect(isReactive(value)).toBe(true)
+            expect(isReactive(value)).toBe(true)
           }
         })
       }
@@ -360,7 +359,6 @@ describe('reactivity/readonly', () => {
     expect(dummy).toBe(2)
   })
 
-  // wait vue release
   test('readonly collection should not track', () => {
     const map = new Map()
     map.set('foo', 1)
