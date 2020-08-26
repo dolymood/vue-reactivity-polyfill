@@ -1,6 +1,6 @@
 {
   "name": "vue-reactivity-polyfill",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Vue 3 reactivity polyfill",
   "main": "index.js",
   "module": "dist/reactivity-polyfill.esm-bundler.js",
