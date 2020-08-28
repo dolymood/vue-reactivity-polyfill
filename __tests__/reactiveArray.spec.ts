@@ -1,5 +1,5 @@
 import { reactive, isReactive, toRaw, ref, isRef, effect } from '@vue/reactivity'
-import { get } from '../src'
+import { set, get, del } from '../src'
 
 describe('reactivity/reactive/Array', () => {
   test('should make Array reactive', () => {
@@ -96,10 +96,36 @@ describe('reactivity/reactive/Array', () => {
       fn(get(arr, 'length'))
     })
     expect(fn).toHaveBeenCalledTimes(1)
-    // todo
-    // delete arr[1]
-    // @ts-ignore
-    arr[1] = undefined
+    del(arr, 1)
+    // for polyfill, does trigger length change
+    expect(fn).toHaveBeenCalledTimes(2)
+  })
+
+  test('add existing index on Array should not trigger length dependency', () => {
+    const array = new Array(3)
+    const observed = reactive(array)
+    const fn = jest.fn()
+    effect(() => {
+      fn(get(observed, 'length'))
+    })
+    expect(fn).toHaveBeenCalledTimes(1)
+    set(observed, 1, 1)
+    // observed[1] = 1
+    // for polyfill, does trigger length change
+    expect(fn).toHaveBeenCalledTimes(2)
+  })
+
+  test('add non-integer prop on Array should not trigger length dependency', () => {
+    const array = new Array(3)
+    const observed = reactive(array)
+    const fn = jest.fn()
+    effect(() => {
+      fn(get(observed, 'length'))
+    })
+    expect(fn).toHaveBeenCalledTimes(1)
+    set(observed, 'x', 'x')
+    expect(fn).toHaveBeenCalledTimes(1)
+    set(observed, -1, 'x')
     expect(fn).toHaveBeenCalledTimes(1)
   })
 

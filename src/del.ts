@@ -22,7 +22,7 @@ export function del (target: Array<any> | Object, key: any) {
   }
 
   if (Array.isArray(target) && isValidArrayIndex(key)) {
-    target.splice(key, 1)
+    proxy.splice(key, 1)
     return
   }
 

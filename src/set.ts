@@ -20,7 +20,7 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
     return val
   }
   if (Array.isArray(target) && isValidArrayIndex(key)) {
-    (target as Array<any>).splice(key, 1, val)
+    (proxy as Array<any>).splice(key, 1, val)
     return val
   }
   // already exits

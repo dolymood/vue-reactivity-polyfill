@@ -1,5 +1,5 @@
 diff --git a/node_modules/proxy-polyfill/src/proxy.js b/node_modules/proxy-polyfill/src/proxy.js
-index 01ced4b..7062556 100644
+index 01ced4b..ea7287a 100644
 --- a/node_modules/proxy-polyfill/src/proxy.js
 +++ b/node_modules/proxy-polyfill/src/proxy.js
 @@ -104,7 +104,9 @@ module.exports = function proxyPolyfill() {
@@ -44,7 +44,7 @@ index 01ced4b..7062556 100644
      // Define proxy as an object that extends target.[[Prototype]],
      // or a Function (if either it's callable, or apply is set).
      const proto = getProto(target);  // can return null in old browsers
-@@ -144,47 +170,61 @@ module.exports = function proxyPolyfill() {
+@@ -144,47 +170,64 @@ module.exports = function proxyPolyfill() {
          return target.apply(this, args);
        };
        isMethod = true;
@@ -68,7 +68,10 @@ index 01ced4b..7062556 100644
 +          };
 +          try {
 +            $Object.defineProperty(proxy, prop, desc);
-+          } catch (e) {}
++          } catch (e) {
++            // just set
++            proxy[prop] = target[prop];
++          }
 +          propertyMap[prop] = true;
 +        });
 +      } else {
@@ -133,7 +136,7 @@ index 01ced4b..7062556 100644
        };
        $Object.defineProperty(proxy, prop, desc);
        propertyMap[prop] = true;
-@@ -221,8 +261,9 @@ module.exports = function proxyPolyfill() {
+@@ -221,8 +264,9 @@ module.exports = function proxyPolyfill() {
      }
  
      // The Proxy polyfill cannot handle adding new properties. Seal the target and proxy.
