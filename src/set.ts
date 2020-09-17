@@ -1,22 +1,14 @@
-import { isReactive, isReadonly, toRaw } from '@vue/reactivity'
-import { isValidArrayIndex, addProp, isPolyfillProxy } from './util'
+import { isValidArrayIndex, addProp, isPolyfillProxy, getProxyAndTarget } from './util'
 
 /**
  * Set a property on an object. Adds the new property and
  * triggers change notification if the property doesn't
  * already exist.
  */
-export function set (target: Array<any> | Object, key: any, val: any): any {
-  const proxy = target as any
+export function set (o: Array<any> | Object, key: any, val: any): any {
+  const { proxy, target } = getProxyAndTarget(o)
   if (!isPolyfillProxy(proxy)) {
-    proxy[key] = val
-    return val
-  }
-  const _isReactive = isReactive(proxy)
-  const _isReadonly = isReadonly(proxy)
-  target = toRaw(proxy) as any
-  if (!_isReactive && !_isReadonly) {
-    proxy[key] = val
+    (proxy as any)[key] = val
     return val
   }
   if (Array.isArray(target) && isValidArrayIndex(key)) {

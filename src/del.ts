@@ -1,23 +1,17 @@
-import { isReactive, toRaw, trigger, TriggerOpTypes } from '@vue/reactivity'
+import { trigger, TriggerOpTypes } from '@vue/reactivity'
 import { hasOwn } from '@vue/shared'
-import { isValidArrayIndex, handleReadonly, isPolyfillProxy } from './util'
+import { isValidArrayIndex, handleReadonly, isPolyfillProxy, getProxyAndTarget } from './util'
 
 /**
  * Delete a property and trigger change if necessary.
  */
-export function del (target: Array<any> | Object, key: any) {
-  const proxy = target as any
+export function del (o: Array<any> | Object, key: any) {
+  const { proxy, target } = getProxyAndTarget(o)
   if (!isPolyfillProxy(proxy)) {
-    delete proxy[key]
-  }
-  target = toRaw(proxy) as any
-  if (handleReadonly(target, key)) {
+    delete (proxy as any)[key]
     return
   }
-
-  const _isReactive = isReactive(proxy)
-  if (!_isReactive) {
-    delete proxy[key]
+  if (handleReadonly(proxy, key, 'Delete')) {
     return
   }
 

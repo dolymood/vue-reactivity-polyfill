@@ -238,6 +238,10 @@ describe('reactivity/ref', () => {
     // mutating source should trigger effect using the proxy refs
     a.x = 4
     expect(dummyX).toBe(4)
+
+    // should keep ref
+    const r = { x: ref(1) }
+    expect(toRef(r, 'x')).toBe(r.x)
   })
 
   test('toRefs', () => {

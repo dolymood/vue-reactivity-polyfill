@@ -1,4 +1,4 @@
-import { reactive, readonly, toRaw, trigger, isReactive, isReadonly, TriggerOpTypes } from '@vue/reactivity'
+import { reactive, readonly, toRaw, trigger, isReactive, isReadonly, isProxy, TriggerOpTypes } from '@vue/reactivity'
 import { isObject } from '@vue/shared'
 import { def } from './lang'
 export { def, isPolyfillProxy } from './lang'
@@ -17,12 +17,25 @@ export function isValidArrayIndex (val: any) {
   return n >= 0 && Math.floor(n) === n && isFinite(val)
 }
 
-export function handleReadonly (proxy: any, key: any) {
+export function handleReadonly (proxy: any, key: any, operation: string = 'Set') {
   const _isReadonly = isReadonly(proxy)
   if (_isReadonly) {
-    console.warn(`Set operation on key "${String(key)}" failed: target is readonly.`, proxy)
+    console.warn(`${operation} operation on key "${String(key)}" failed: target is readonly.`, proxy)
   }
   return _isReadonly
+}
+
+export function getProxyAndTarget (target: any): { proxy: any, target: any } {
+  let proxy: any = target
+  if (isProxy(target)) {
+    target = toRaw(proxy)
+  } else {
+    proxy = reactive(target)
+  }
+  return {
+    proxy,
+    target
+  }
 }
 
 export function addProp (proxy: any, key: any, val: any) {
