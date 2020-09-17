@@ -52,6 +52,7 @@
   },
   "peerDependencies": {
     "@vue/reactivity": "^3",
+    "vue-reactivity-polyfill-getownpropertynames": "*",
     "@babel/core": "*",
     "@babel/runtime": "^7",
     "core-js": "^3.6.5"
