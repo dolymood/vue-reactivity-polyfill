@@ -12,11 +12,16 @@ Here is a demo, [vue-next-demo](https://github.com/dolymood/vue-next-demo).
 ### Usage
 
 ```js
+// add polyfill
+// vue-reactivity-polyfill-getownpropertynames is used to
+// fix IE Obejct.getOwnPropertyNames(fn) error.
+// for bundle, must imported before @vue/reactivity or vue
+import 'vue-reactivity-polyfill-getownpropertynames'
+import 'vue-reactivity-polyfill'
+// use
 import { ref } from '@vue/reactivity'
 // or
 import { ref } from 'vue'
-// add polyfill
-import { get, set, del } from 'vue-reactivity-polyfill'
 ```
 
 ### New API
