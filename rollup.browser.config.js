@@ -6,7 +6,7 @@ import config, { addProd } from './rollup.base.config'
 // reactivity-polyfill.esm-browser
 // reactivity-polyfill.esm-browser.prod
 
-config.external = ['@vue/reactivity']
+config.external = ['@vue/reactivity', 'vue-reactivity-polyfill-getownpropertynames']
 config.output = [
   {
     file: 'dist/reactivity-polyfill.esm-browser.js',

@@ -1,6 +1,6 @@
 {
   "name": "vue-reactivity-polyfill",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Vue 3 reactivity polyfill",
   "main": "index.js",
   "module": "dist/reactivity-polyfill.esm-bundler.js",
@@ -47,7 +47,8 @@
     "rollup-plugin-terser": "^6.1.0",
     "ts-jest": "^26.1.4",
     "typescript": "^3.9.7",
-    "vue": "^3.0.0-rc.12"
+    "vue": "^3.0.0-rc.12",
+    "vue-reactivity-polyfill-getownpropertynames": "0.0.1"
   },
   "peerDependencies": {
     "@vue/reactivity": "^3",
