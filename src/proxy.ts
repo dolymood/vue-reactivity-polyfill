@@ -8,8 +8,23 @@ if (!isNativeProxy) {
   var arrayKeys = Object.getOwnPropertyNames(arrayMethods)
   // hack Proxy for Vue
   const ProxyPolyfill: any = function (target: any, handler: any) {
+    const isArray = Array.isArray(target)
+    // for Array cases
+    // vue3 handle proto methods too
+    // so we neet to force delegate it
+    // https://github.com/vuejs/vue-next/issues/2137
+    const originGet = handler.get
+    handler.get = function (target: any, key: string, receiver: object) {
+      if (isArray && hasOwn(arrayMethods, key)) {
+        // array proto methods cases
+        // just return arrayMethods key
+        return arrayMethods[key]
+      }
+      const ret = originGet.call(handler, target, key, receiver)
+      return ret
+    }
     const proxy = new NativeProxy(target, handler)
-    if (Array.isArray(target)) {
+    if (isArray) {
       // array cases
       if (hasProto) {
         protoAugment(target, arrayMethods)

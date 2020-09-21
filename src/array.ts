@@ -1,5 +1,17 @@
 import { def, ReactiveFlags, addProp, handleReadonly, toReactive, toReadonly, toShallow } from './util'
-import { ITERATE_KEY, toRaw, trigger, isReactive, TriggerOpTypes, isReadonly, isProxy, track, TrackOpTypes } from '@vue/reactivity'
+import {
+  ITERATE_KEY,
+  toRaw,
+  trigger,
+  isReactive,
+  TriggerOpTypes,
+  isReadonly,
+  isProxy,
+  track,
+  TrackOpTypes,
+  pauseTracking,
+  enableTracking
+} from '@vue/reactivity'
 // clone https://github.com/vuejs/vue/blob/dev/src/core/observer/array.js
 const arrayProto: any = Array.prototype
 // const methods = Object.getOwnPropertyNames(arrayProto)
@@ -43,9 +55,12 @@ methodsToPatch.forEach(function (method) {
       if (handleReadonly(proxy, method)) {
         return
       }
+      // fix https://github.com/vuejs/vue-next/issues/2137
+      pauseTracking()
       const oldThis = target.slice()
       const oldLen = oldThis.length
       const result = original.apply(target, args)
+      enableTracking()
       const newLen = target.length
       let i = 0
       let j = 0
