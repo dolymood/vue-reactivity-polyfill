@@ -47,7 +47,7 @@
     "rollup-plugin-terser": "^6.1.0",
     "ts-jest": "^26.1.4",
     "typescript": "^4.0.3",
-    "vue": "^3.0.2",
+    "vue": "^3.0.4",
     "vue-reactivity-polyfill-getownpropertynames": "0.0.1"
   },
   "peerDependencies": {
